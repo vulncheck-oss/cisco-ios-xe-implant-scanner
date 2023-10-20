@@ -27,7 +27,7 @@ func (sploit XEImplantScanner) ValidateTarget(conf *config.Config) bool {
 		return false
 	}
 
-	if server[0] != "nginx" {
+	if server[0] != "nginx" && server[0] != "openresty" {
 		output.PrintDebug("Wrong Server")
 
 		return false
