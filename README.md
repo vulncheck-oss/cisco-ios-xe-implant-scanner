@@ -1,6 +1,6 @@
 # Cisco IOS XE Implant Scanner
 
-On October 23, 2023 with all implants no longer responding to requests to `/webui/logoutconfirm.html`, [Fox-IT](https://github.com/fox-it/cisco-ios-xe-implant-detection) developed a new way to determine if a system is compromised or not. In particular, instead of responding to requests with a redirect to the login, the attacker's implant had logic to return 404 if requested URI contains `%`. So this scanner now sends an HTTP get request like `/Fadf%25`. A system with an implant will return the following payload:
+On October 23, 2023, with all implants no longer responding to requests to `/webui/logoutconfirm.html`, [Fox-IT](https://github.com/fox-it/cisco-ios-xe-implant-detection) developed a new way to determine if a system is compromised or not. In particular, instead of responding to requests with a redirect to the login, the attacker's implant had logic to return 404 if requested URI contained `%`. So this scanner now sends an HTTP get request like `/Fadf%25`. A system with an implant will return the following payload:
 
 ```
 <html>
