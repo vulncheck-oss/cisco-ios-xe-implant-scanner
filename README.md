@@ -1,5 +1,49 @@
 # Cisco IOS XE Implant Scanner
 
+On October 23, 2023 with all implants no longer responding to requests to `/webui/logoutconfirm.html`, [Fox-IT](https://github.com/fox-it/cisco-ios-xe-implant-detection) developed a new way to determine if a system is compromised or not. In particular, instead of responding to requests with a redirect to the login, the attacker's implant had logic to return 404 if requested URI contains `%`. So this scanner now sends an HTTP get request like `/Fadf%25`. A system with an implant will return the following payload:
+
+```
+<html>
+<head><title>404 Not Found</title></head>
+<body bgcolor="white">
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+```
+
+Usage is the same as before (see "Old Docs" section for more usage info) but we can no longer recover the implant-id.
+
+## Example output for an implanted host
+
+```
+./build/implant-scanner -a -v -c -rhost 10.9.49.180
+time=2023-10-23T14:33:07.581-04:00 level=STATUS msg="Starting target" index=0 host=10.9.49.180 port=80 ssl=false "ssl auto"=true
+time=2023-10-23T14:33:08.782-04:00 level=STATUS msg="Validating IOS XE target" host=10.9.49.180 port=80
+time=2023-10-23T14:33:10.115-04:00 level=SUCCESS msg="Target validation succeeded!" host=10.9.49.180 port=80
+time=2023-10-23T14:33:10.115-04:00 level=STATUS msg="Running a version check on the remote target" host=10.9.49.180 port=80
+time=2023-10-23T14:33:10.624-04:00 level=SUCCESS msg="The target appears to be a vulnerable version!" host=10.9.49.180 port=80
+```
+
+## Example output for a host with no implant
+
+```
+./build/implant-scanner -a -v -c -rhost 10.9.49.124
+time=2023-10-23T14:34:31.207-04:00 level=STATUS msg="Starting target" index=0 host=10.9.49.124 port=80 ssl=false "ssl auto"=true
+time=2023-10-23T14:34:31.340-04:00 level=STATUS msg="Validating IOS XE target" host=10.9.49.124 port=80
+time=2023-10-23T14:34:31.363-04:00 level=SUCCESS msg="Target validation succeeded!" host=10.9.49.124 port=80
+time=2023-10-23T14:34:31.363-04:00 level=STATUS msg="Running a version check on the remote target" host=10.9.49.124 port=80
+time=2023-10-23T14:34:31.378-04:00 level=ERROR msg="The target appears to be a patched version." host=10.9.49.124 port=80
+```
+
+# Old Docs
+
 Scans for the IOS XE implant as described by [Cisco PSIRT](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-iosxe-webui-privesc-j22SaA4z) and [Cisco Talos](https://blog.talosintelligence.com/active-exploitation-of-cisco-ios-xe-software/). The scanner will send an HTTP POST request to `/webui/logoutconfirm.html?logon_hash=1` and look for the 18 byte hexstring in response. The scanner output will have a line like this when it finds an implant:
 
 ```sh
