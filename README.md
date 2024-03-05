@@ -20,6 +20,23 @@ On October 23, 2023, with all implants no longer responding to requests to `/web
 
 Usage is the same as before (see "Old Docs" section for more usage info) but we can no longer recover the implant-id.
 
+## Compiling
+
+You can use the makefile to build a docker container:
+
+```
+make docker
+```
+
+Or, if you have a Go build environment ready to go, just use `make`:
+
+```sh
+albinolobster@mournland:~/cisco-ios-xe-implant-scanner$ make
+gofmt -d -w implant-scanner.go 
+golangci-lint run --fix implant-scanner.go
+GOOS=linux GOARCH=arm64 go build -o build/implant-scanner_linux-arm64 implant-scanner.go
+```
+
 ## Example output for an implanted host
 
 ```
