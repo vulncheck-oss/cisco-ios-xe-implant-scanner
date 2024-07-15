@@ -20,7 +20,7 @@ var doOldScan bool
 
 func (sploit XEImplantScanner) ValidateTarget(conf *config.Config) bool {
 	url := protocol.GenerateURL(conf.Rhost, conf.Rport, conf.SSL, "/")
-	resp, body, ok := protocol.HTTPSendAndRecv("GET", url, "")
+	resp, body, ok := protocol.HTTPGetCache(url)
 	if !ok {
 		return false
 	}
