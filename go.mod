@@ -2,7 +2,7 @@ module github.com/vulncheck-oss/implant-scanner
 
 go 1.22.2
 
-require github.com/vulncheck-oss/go-exploit v1.22.0
+require github.com/vulncheck-oss/go-exploit v1.23.1
 
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
